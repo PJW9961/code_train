@@ -1,27 +1,8 @@
 # LeetCode Day 1 - 盛最多水的容器
 
-## 题目描述
-
-给定一个长度为 n 的整数数组 height。有 n 条垂线，第 i 条线的两个端点是 (i, 0) 和 (i, height[i])。
-
-找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
-
-返回容器可以储存的最大水量。
-
-## 示例
-
-### 示例 1：
-```
-输入：height = [1,8,6,2,5,4,8,3,7]
-输出：49
-解释：图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。
-```
-
-### 示例 2：
-```
-输入：height = [1,1]
-输出：1
-```
+> **题目链接**: [11. 盛最多水的容器 - LeetCode](https://leetcode.cn/problems/container-with-most-water/)  
+> **难度**: 中等  
+> **标签**: 贪心算法, 双指针
 
 ## 解题思路
 
@@ -29,13 +10,63 @@
 
 1. **核心思想**：使用双指针从数组两端向中间移动
 2. **面积计算**：面积 = 两指针间距离 × min(左指针高度, 右指针高度)
-3. **指针移动策略**：总是移动较短的一边，因为移动较长的一边不可能得到更大的面积
+3. **指针移动策略**：总是移动高度较小的一边，因为移动较长的一边不可能得到更大的面积（后续进行证明）
 
 ### 为什么移动较短的指针？
 
-- 容器的高度由较短的线决定
-- 如果移动较长的指针，宽度减少，而高度仍然受较短指针限制
-- 移动较短的指针，虽然宽度减少，但有可能遇到更高的线，从而增加总面积
+#### 数学证明（反证法）
+
+**要证明的命题：** 假设 `height[left] ≤ height[right]`，那么 `(left, right)` 是所有以 `left` 为左边界的组合中的最优解。
+
+**证明过程：**
+
+1. **假设条件**
+   - 设 `height[left] < height[right]`
+   - 假设存在 `k` 满足 `left < k < right`，使得 `Area(left, k) > Area(left, right)`
+
+2. **建立不等式**
+   
+   根据假设，需要满足：
+   ```
+   (k - left) × min(height[k], height[left]) > (right - left) × min(height[right], height[left])
+   ```
+   
+   由于 `height[left] < height[right]`，上式简化为：
+   ```
+   (k - left) × min(height[k], height[left]) > (right - left) × height[left]
+   ```
+
+3. **分情况讨论**
+
+   **已知条件：** `k - left < right - left`（因为 `k < right`）
+
+   **情况1：** `height[k] < height[left]`
+   ```
+   Area(left, k) = (k - left) × height[k]
+                 < (k - left) × height[left]    [因为 height[k] < height[left]]
+                 < (right - left) × height[left]  [因为 k - left < right - left]
+                 = Area(left, right)
+   ```
+   
+   **情况2：** `height[k] ≥ height[left]`
+   ```
+   Area(left, k) = (k - left) × height[left]    [因为 min(height[k], height[left]) = height[left]]
+                 < (right - left) × height[left]  [因为 k - left < right - left]
+                 = Area(left, right)
+   ```
+
+4. **得出矛盾**
+   
+   无论哪种情况，都有 `Area(left, k) < Area(left, right)`，与假设矛盾。
+
+5. **结论**
+   
+   因此假设不成立，`(left, right)` 确实是所有以 `left` 为左边界的组合中的最优解。
+   
+   **推论：** 我们可以安全地移动左指针而不会错过最优解。同理可证移动右指针的情况。
+
+---
+
 
 ## 代码实现
 
@@ -124,36 +155,15 @@ int maxArea(vector<int>& height) {
 49
 ```
 
-### 执行过程
-1. left=0 (height=1), right=8 (height=7) → area = 8×1 = 8
-2. left=1 (height=8), right=8 (height=7) → area = 7×7 = 49
-3. left=1 (height=8), right=7 (height=3) → area = 6×3 = 18
-4. ... (继续移动直到 left >= right)
-
 ## 关键点总结
 
 1. **双指针技巧**：从两端向中间移动，避免了 O(n²) 的暴力解法
-2. **贪心策略**：始终移动较短的指针
+2. **贪心策略**：始终移动较短的指针，在减少遍历范围的同时，确保了最优解不被掠过。
 3. **数学思维**：面积 = 宽度 × 高度，高度由较短边决定
-
-## 其他测试用例
-
-```cpp
-// 测试用例1
-输入：[1,1] 
-输出：1
-
-// 测试用例2  
-输入：[4,3,2,1,4]
-输出：16
-
-// 测试用例3
-输入：[1,2,1]
-输出：2
-```
 
 ## 学习收获
 
 - 理解了双指针算法的应用场景
 - 掌握了贪心策略的思维方式
 - 学会了从 O(n²) 优化到 O(n) 的技巧
+
