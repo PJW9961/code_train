@@ -55,7 +55,7 @@ if (n >= 4475) return 1.0;  // 数学分析得出的阈值
 
 ## 代码实现
 
-### 方法1：记忆化递归（推荐解法）
+### 方法1：记忆化递归
 
 ```cpp
 #include<iostream>
@@ -104,7 +104,7 @@ int main() {
 }
 ```
 
-### 方法2：状态压缩优化版本
+### 方法2：状态压缩优化版本（推荐解法）
 
 ```cpp
 double dfs(int a,int b, vector<vector<double> >& memo)
