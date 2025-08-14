@@ -1,0 +1,27 @@
+# 忽略所有可执行文件
+*.exe
+
+# 忽略编译产生的目标文件
+*.o
+*.obj
+
+# 忽略临时文件
+*.tmp
+*.temp
+
+# 忽略VS Code配置文件（如果不想共享）
+# .vscode/
+
+# 忽略系统文件
+Thumbs.db
+.DS_Store
+
+# 忽略调试文件
+*.pdb
+*.ilk
+
+# 忽略其他编译产生的文件
+*.lib
+*.dll
+*.so
+*.dylib
